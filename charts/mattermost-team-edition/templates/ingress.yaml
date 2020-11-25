@@ -33,7 +33,14 @@ spec:
           servicePort: {{ $servicePort }}
   {{ end }}
   {{ if $ingress.tls }}
+ {{- if .Values.ingress.tls }}
   tls:
-    {{- $ingress.tls | toYaml | nindent 4 }}
-  {{ end }}
+  - hosts:
+    {{- if  .Values.ingress.hostName }}
+    - {{ .Values.ingress.hostName }}
+    secretName: {{  .Values.ingress.tlsSecret }}
+    {{- else}}
+    - secretName: {{  .Values.ingress.tlsSecret }}
+    {{- end }}
+  {{- end }}
 {{ end }}
